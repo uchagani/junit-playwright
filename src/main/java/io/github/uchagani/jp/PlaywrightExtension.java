@@ -72,11 +72,11 @@ public class PlaywrightExtension implements ParameterResolver {
             Browser browser = getBrowser(extensionContext);
             PlaywrightConfig config = getPlaywrightConfig(extensionContext);
 
-            if (config.createBrowserOptions().getCreateMethod() == BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT) {
+            if (config.getBrowserConfig().getCreateMethod() == BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT) {
                 return getBrowserContext(extensionContext);
             }
 
-            Browser.NewContextOptions newContextOptions = config.createBrowserOptions().getNewContextOptions();
+            Browser.NewContextOptions newContextOptions = config.getBrowserConfig().getNewContextOptions();
 
             if (newContextOptions == null) {
                 browserContext = browser.newContext();
@@ -96,7 +96,7 @@ public class PlaywrightExtension implements ParameterResolver {
 
         if (browser == null) {
             Playwright playwright = getPlaywright(extensionContext);
-            BrowserConfig config = getPlaywrightConfig(extensionContext).createBrowserOptions();
+            BrowserConfig config = getPlaywrightConfig(extensionContext).getBrowserConfig();
             BrowserChoice browserChoice = config.getBrowser();
             BrowserCreateMethod browserCreateMethod = config.getCreateMethod();
             BrowserType browserType = null;
@@ -179,7 +179,7 @@ public class PlaywrightExtension implements ParameterResolver {
 
         if (playwright == null) {
             PlaywrightConfig config = getPlaywrightConfig(extensionContext);
-            Playwright.CreateOptions options = config.createBrowserOptions().getPlaywrightCreateOptions();
+            Playwright.CreateOptions options = config.getBrowserConfig().getPlaywrightCreateOptions();
             if (options == null) {
                 playwright = Playwright.create();
             } else {
