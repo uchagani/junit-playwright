@@ -1,5 +1,6 @@
 package io.github.uchagani.jp;
 
+import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.Playwright;
 
 import java.util.Map;
@@ -11,6 +12,9 @@ public class DefaultConfig implements PlaywrightConfig {
     public BrowserConfig getBrowserConfig() {
         return new BrowserConfig()
                 .setPlaywrightCreateOptions(new Playwright.CreateOptions().setEnv(playwrightOptions))
-                .chromium().launch();
+                .chromium()
+                .launch()
+                .setNewContextOptions(new Browser.NewContextOptions()
+                        .setBaseURL("https://google.com"));
     }
 }

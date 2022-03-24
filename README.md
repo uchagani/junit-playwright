@@ -64,10 +64,16 @@ public class InjectBrowserTests {
 * [BrowserContext](https://playwright.dev/java/docs/api/class-browsercontext)
 * [Page](https://playwright.dev/java/docs/api/class-page)
 
+### Examples
+
+Please take a look at the tests located int `src/test/java/io/github/uchagani/jp` for more information on how to create
+configs and create tests.
+
 ### Running tests in parallel
 
-`playwright-junit` makes it easy to run tests in parallel.  Each test will get an isolated Playwright environment.  All you have to do is enable parallel tests in junit. The
-easiest way to do this is to create a file in your classpath called `junit-platform.properties`. For example:
+`playwright-junit` makes it easy to run tests in parallel. Each test will get an isolated Playwright environment. All
+you have to do is enable parallel tests in junit. The easiest way to do this is to create a file in your classpath
+called `junit-platform.properties`. For example:
 `src/test/resources/junit-platform.properties` and enable parallel tests:
 
 ```properties
@@ -80,14 +86,13 @@ You can read more about running junit tests in parallel
 in [their documentation](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parallel-execution). With the
 above configuration tests in the same class will be run in parallel.
 
-
 ### Advanced
 
-You can override the config for a particular test method by adding the `@InjectPlaywright` annotation over a test method:
-
-
+You can override the config for a particular test method by adding the `@InjectPlaywright` annotation over a test
+method:
 
 ```java
+
 @InjectPlaywright(DefaultConfig.class)
 public class InjectBrowserTests {
     @Test

@@ -1,14 +1,11 @@
 package io.github.uchagani.jp;
 
 import com.microsoft.playwright.*;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class PlaywrightExtension implements ParameterResolver {
+public class PlaywrightExtension implements ParameterResolver, AfterEachCallback {
     private static final ExtensionContext.Namespace browserProviderNamespace = ExtensionContext.Namespace.create(PlaywrightExtension.class);
     private static final String playwrightId = ".playwright.";
     private static final String browserId = ".browser.";
@@ -217,6 +214,16 @@ public class PlaywrightExtension implements ParameterResolver {
         }
 
         return config;
+    }
+
+    @Override
+    public void afterEach(ExtensionContext extensionContext) {
+        String id = extensionContext.getUniqueId() + playwrightId;
+        Playwright playwright = extensionContext.getStore(browserProviderNamespace).get(id, Playwright.class);
+
+        if (playwright != null) {
+            playwright.close();
+        }
     }
 }
 
