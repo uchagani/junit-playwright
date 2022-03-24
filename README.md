@@ -33,9 +33,9 @@ public class DefaultConfig implements PlaywrightConfig {
 }
 ```
 
-`PlaywrightConfig` has one method: `getBrowserConfig`. Through the `BrowserConfig` you can specify your
+`PlaywrightConfig` has one method: `getBrowserConfig`. Through the `BrowserConfig` object you can specify your
 playwright-related config. The API is similar to playwright-java. All the options that you would specify to initialize
-Playwright you can do via `BrowserConfig` object.
+Playwright, Browser, BrowserContext, or Page you can do via `BrowserConfig` object.
 
 ### Writing tests
 
@@ -66,7 +66,7 @@ public class InjectBrowserTests {
 
 ### Running tests in parallel
 
-`playwright-junit` makes it easy to run tests in parallel. All you have to do is enable parallel tests in junit. The
+`playwright-junit` makes it easy to run tests in parallel.  Each test will get an isolated Playwright environment.  All you have to do is enable parallel tests in junit. The
 easiest way to do this is to create a file in your classpath called `junit-platform.properties`. For example:
 `src/test/resources/junit-platform.properties` and enable parallel tests:
 
