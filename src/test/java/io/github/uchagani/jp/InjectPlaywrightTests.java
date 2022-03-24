@@ -24,6 +24,7 @@ public class InjectPlaywrightTests {
         var command = ProcessUtils.getCommandsUsedToRunProcess(processPid);
 
         DefaultConfig.playwrightOptions.forEach((k, v) -> assertThat(command).contains(k + "=" + v));
+        playwright.close();
     }
 
     @Test
@@ -34,5 +35,7 @@ public class InjectPlaywrightTests {
         var command = ProcessUtils.getCommandsUsedToRunProcess(processPid);
 
         OverrideConfig.playwrightOptions.forEach((k, v) -> assertThat(command).contains(k + "=" + v));
-        DefaultConfig.playwrightOptions.forEach((k, v) -> assertThat(command).doesNotContain(k + "=" + v));    }
+        DefaultConfig.playwrightOptions.forEach((k, v) -> assertThat(command).doesNotContain(k + "=" + v));
+        playwright.close();
+    }
 }
