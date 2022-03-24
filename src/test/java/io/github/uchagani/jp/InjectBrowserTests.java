@@ -24,5 +24,4 @@ public class InjectBrowserTests {
 
         assertThat(br.name()).isEqualTo("firefox");
     }
-
 }
