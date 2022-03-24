@@ -6,7 +6,17 @@
 
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+
+    <name>junit-playwright</name>
+    <description>junit-playwright allows you to easily run Playwright-Java tests in parallel</description>
+    <url>https://github.com/uchagani/junit-playwright</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/uchagani/junit-playwright/blob/main/LICENSE</url>
+        </license>
+    </licenses>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
