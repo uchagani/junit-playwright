@@ -9,7 +9,7 @@
 <dependency>
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
