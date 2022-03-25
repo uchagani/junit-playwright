@@ -1,6 +1,7 @@
 package io.github.uchagani.jp;
 
 import com.microsoft.playwright.Playwright;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -13,6 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 These tests need to be run serially because I couldn't figure out a good way to get
 the pid of the correct cli.js process when run in parallel.
  */
+@Tag("playwright")
 @Execution(ExecutionMode.SAME_THREAD)
 @InjectPlaywright(DefaultConfig.class)
 public class InjectPlaywrightTests {
