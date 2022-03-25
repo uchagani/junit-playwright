@@ -22,5 +22,4 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" -Dgroups=playwright --file pom.xml --no-transfer-progress
-#      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" -DexcludedGroups=playwright --file pom.xml --no-transfer-progress
+      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" --file pom.xml --no-transfer-progress
