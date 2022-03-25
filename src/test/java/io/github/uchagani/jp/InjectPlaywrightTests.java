@@ -3,11 +3,13 @@ package io.github.uchagani.jp;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.PlaywrightException;
 import io.github.uchagani.jp.configs.PlaywrightCreateConfig;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+@Tag("playwright")
 @InjectPlaywright(PlaywrightCreateConfig.class)
 public class InjectPlaywrightTests {
 
