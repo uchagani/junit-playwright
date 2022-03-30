@@ -28,6 +28,14 @@ public class TraceTestCase {
                     .forEach(File::delete);
         } catch (Exception ignored) {
         }
+
+        try {
+            Files.walk(Paths.get("test-results-2"))
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        } catch (Exception ignored) {
+        }
     }
 
     @Test
