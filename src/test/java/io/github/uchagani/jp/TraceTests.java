@@ -49,15 +49,4 @@ public class TraceTests {
             throw new RuntimeException(ex);
         }
     }
-
-//    @Test
-//    void verifyTraceFilesAreCreated() {
-//        List<Method> testMethods = Arrays.stream(TraceTestCase.class.getMethods())
-//                .filter(m -> m.isAnnotationPresent(Test.class)).collect(Collectors.toList());
-//
-//        for(Method test : testMethods) {
-//            String x = "foo";
-//        }
-//    }
-
 }
