@@ -78,7 +78,7 @@ public class TraceTestCase {
 
     @Test
     @InjectPlaywright(TraceConfigAlternateOutputDir.class)
-    public void traceFile_inAlternateDir_isCreated() {
+    public void traceFile_inAlternateDir_isCreated(Page ignored) {
         //force pass
         return;
     }
