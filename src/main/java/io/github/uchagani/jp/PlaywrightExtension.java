@@ -4,13 +4,52 @@ import com.microsoft.playwright.*;
 import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class PlaywrightExtension implements ParameterResolver, AfterEachCallback {
+public class PlaywrightExtension implements ParameterResolver, TestWatcher {
     private static final ExtensionContext.Namespace browserProviderNamespace = ExtensionContext.Namespace.create(PlaywrightExtension.class);
     private static final String playwrightId = ".playwright.";
     private static final String browserId = ".browser.";
     private static final String browserContextId = ".browserContext.";
     private static final String pageId = ".page.";
+
+    @Override
+    public void testSuccessful(ExtensionContext extensionContext) {
+        BrowserConfig browserConfig = getPlaywrightConfig(extensionContext).getBrowserConfig();
+
+        if (browserConfig.getEnableTracing()) {
+            if (!browserConfig.getSaveTraceOnlyOnFailure()) {
+                stopTrace(extensionContext);
+            }
+        }
+
+        closePlaywright(extensionContext);
+    }
+
+    @Override
+    public void testAborted(ExtensionContext extensionContext, Throwable cause) {
+        BrowserConfig browserConfig = getPlaywrightConfig(extensionContext).getBrowserConfig();
+
+        if (browserConfig.getEnableTracing()) {
+            if (!browserConfig.getSaveTraceOnlyOnFailure()) {
+                stopTrace(extensionContext);
+            }
+        }
+
+        closePlaywright(extensionContext);
+    }
+
+    @Override
+    public void testFailed(ExtensionContext extensionContext, Throwable cause) {
+        BrowserConfig browserConfig = getPlaywrightConfig(extensionContext).getBrowserConfig();
+
+        if (browserConfig.getEnableTracing()) {
+            stopTrace(extensionContext);
+        }
+
+        closePlaywright(extensionContext);
+    }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -67,18 +106,22 @@ public class PlaywrightExtension implements ParameterResolver, AfterEachCallback
 
         if (browserContext == null) {
             Browser browser = getBrowser(extensionContext);
-            PlaywrightConfig config = getPlaywrightConfig(extensionContext);
+            BrowserConfig browserConfig = getPlaywrightConfig(extensionContext).getBrowserConfig();
 
-            if (config.getBrowserConfig().getCreateMethod() == BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT) {
+            if (browserConfig.getCreateMethod() == BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT) {
                 return getBrowserContext(extensionContext);
             }
 
-            Browser.NewContextOptions newContextOptions = config.getBrowserConfig().getNewContextOptions();
+            Browser.NewContextOptions newContextOptions = browserConfig.getNewContextOptions();
 
             if (newContextOptions == null) {
                 browserContext = browser.newContext();
             } else {
                 browserContext = browser.newContext(newContextOptions);
+            }
+
+            if (browserConfig.getEnableTracing()) {
+                browserContext.tracing().start(getTraceStartOptions());
             }
 
             saveBrowserContextInStore(extensionContext, browserContext);
@@ -216,14 +259,40 @@ public class PlaywrightExtension implements ParameterResolver, AfterEachCallback
         return config;
     }
 
-    @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        String id = extensionContext.getUniqueId() + playwrightId;
-        Playwright playwright = extensionContext.getStore(browserProviderNamespace).get(id, Playwright.class);
+    private void closePlaywright(ExtensionContext extensionContext) {
+        Playwright playwright = getPlaywright(extensionContext);
 
         if (playwright != null) {
             playwright.close();
         }
+    }
+
+    private Tracing.StartOptions getTraceStartOptions() {
+        Tracing.StartOptions startOptions = new Tracing.StartOptions()
+                .setSnapshots(true)
+                .setScreenshots(true);
+
+        if (System.getenv("PLAYWRIGHT_JAVA_SRC") != null) {
+            startOptions.setSources(true);
+        }
+
+        return startOptions;
+    }
+
+    private void stopTrace(ExtensionContext extensionContext) {
+        BrowserConfig config = getPlaywrightConfig(extensionContext).getBrowserConfig();
+        BrowserContext browserContext = getBrowserContext(extensionContext);
+
+        Path tracePath = Paths.get(String.valueOf(config.getOutputDirectory()), getSafeTestName(extensionContext));
+
+        Tracing.StopOptions stopOptions = new Tracing.StopOptions()
+                .setPath(tracePath);
+
+        browserContext.tracing().stop(stopOptions);
+    }
+
+    private String getSafeTestName(ExtensionContext extensionContext) {
+        return extensionContext.getRequiredTestClass().getName() + "." + extensionContext.getRequiredTestMethod().getName() + ".zip";
     }
 }
 
