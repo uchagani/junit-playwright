@@ -6,7 +6,7 @@
 
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <name>junit-playwright</name>
     <description>junit-playwright allows you to easily run Playwright-Java tests in parallel</description>
@@ -22,7 +22,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <playwright.version>1.20.0</playwright.version>
-        <junit.version>5.6.3</junit.version>
+        <junit.version>5.8.2</junit.version>
         <!-- set latest manifold version here -->
         <manifold.version>2022.1.7</manifold.version>
     </properties>
@@ -62,7 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -88,15 +88,8 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-testkit</artifactId>
             <version>1.8.2</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-commons</artifactId>
-            <version>1.8.2</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
     <build>
         <plugins>
