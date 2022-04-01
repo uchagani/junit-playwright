@@ -5,6 +5,7 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class BrowserConfig {
     private Playwright.CreateOptions playwrightCreateOptions;
@@ -18,17 +19,47 @@ public class BrowserConfig {
     private Path userDataDir;
     private BrowserType.LaunchPersistentContextOptions launchPersistentContextOptions;
     private Browser.NewContextOptions newContextOptions;
+    private boolean enableTracing = false;
+    private boolean saveTraceOnlyOnFailure = false;
+    private Path outputDirectory = Paths.get("test-results");
+
+    Path getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    public BrowserConfig setOutputDirectory(Path outputDirectory) {
+        this.outputDirectory = outputDirectory;
+        return this;
+    }
+
+    boolean getEnableTracing() {
+        return enableTracing;
+    }
+
+    boolean getSaveTraceOnlyOnFailure() {
+        return saveTraceOnlyOnFailure;
+    }
+
+    public BrowserConfig enableTracing() {
+        enableTracing = true;
+        return this;
+    }
+
+    public BrowserConfig enableTracingOnlyOnFailure() {
+        this.saveTraceOnlyOnFailure = true;
+        return enableTracing();
+    }
 
     public BrowserConfig setNewContextOptions(Browser.NewContextOptions options) {
         this.newContextOptions = options;
         return this;
     }
 
-    public Browser.NewContextOptions getNewContextOptions() {
+    Browser.NewContextOptions getNewContextOptions() {
         return newContextOptions;
     }
 
-    public Playwright.CreateOptions getPlaywrightCreateOptions() {
+    Playwright.CreateOptions getPlaywrightCreateOptions() {
         return playwrightCreateOptions;
     }
 
@@ -37,7 +68,7 @@ public class BrowserConfig {
         return this;
     }
 
-    public BrowserChoice getBrowser() {
+    BrowserChoice getBrowser() {
         return browser;
     }
 
@@ -56,15 +87,15 @@ public class BrowserConfig {
         return this;
     }
 
-    public BrowserCreateMethod getCreateMethod() {
+    BrowserCreateMethod getCreateMethod() {
         return createMethod;
     }
 
-    public String getEndpointUrl() {
+    String getEndpointUrl() {
         return endpointUrl;
     }
 
-    public BrowserType.ConnectOverCDPOptions getConnectOverCDPOptions() {
+    BrowserType.ConnectOverCDPOptions getConnectOverCDPOptions() {
         return connectOverCDPOptions;
     }
 
@@ -80,11 +111,11 @@ public class BrowserConfig {
         return this;
     }
 
-    public String getWsEndpoint() {
+    String getWsEndpoint() {
         return wsEndpoint;
     }
 
-    public BrowserType.ConnectOptions getConnectOptions() {
+    BrowserType.ConnectOptions getConnectOptions() {
         return connectOptions;
     }
 
@@ -100,7 +131,7 @@ public class BrowserConfig {
         return this;
     }
 
-    public BrowserType.LaunchOptions getLaunchOptions() {
+    BrowserType.LaunchOptions getLaunchOptions() {
         return launchOptions;
     }
 
@@ -115,11 +146,11 @@ public class BrowserConfig {
         return this;
     }
 
-    public Path getUserDataDir() {
+    Path getUserDataDir() {
         return userDataDir;
     }
 
-    public BrowserType.LaunchPersistentContextOptions getLaunchPersistentContextOptions() {
+    BrowserType.LaunchPersistentContextOptions getLaunchPersistentContextOptions() {
         return launchPersistentContextOptions;
     }
 
