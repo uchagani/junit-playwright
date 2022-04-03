@@ -1,6 +1,6 @@
 package io.github.uchagani.jp;
 
-enum BrowserChoice {
+public enum BrowserChoice {
     CHROMIUM,
     FIREFOX,
     WEBKIT
