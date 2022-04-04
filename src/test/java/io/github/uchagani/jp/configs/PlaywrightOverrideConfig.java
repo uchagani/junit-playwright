@@ -4,6 +4,9 @@ import com.microsoft.playwright.Playwright;
 import io.github.uchagani.jp.BrowserConfig;
 import io.github.uchagani.jp.PlaywrightConfig;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PlaywrightOverrideConfig implements PlaywrightConfig {
@@ -11,7 +14,7 @@ public class PlaywrightOverrideConfig implements PlaywrightConfig {
     public BrowserConfig getBrowserConfig() {
         return new BrowserConfig()
                 .setPlaywrightCreateOptions(new Playwright.CreateOptions()
-                        .setEnv(Map.of("PLAYWRIGHT_BROWSERS_PATH", "/some/bad/path")))
+                        .setEnv(Collections.singletonMap("PLAYWRIGHT_BROWSERS_PATH", "/some/bad/path")))
                 .chromium()
                 .launch();
     }

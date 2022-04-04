@@ -22,6 +22,9 @@
         <module name="junit-playwright" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="junit-playwright" target="8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-Xplugin:Manifold " />
