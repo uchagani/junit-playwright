@@ -1,6 +1,8 @@
 # junit-playwright
 
-`junit-playwright` allows you to run your JUnit 5 Playwright tests in parallel easily.
+`junit-playwright` allows you to run your JUnit 5 Playwright tests in parallel easily.  `junit-playwright` provides
+isolated environments for each test and exposes Playwright-related objects as test parameters for you to use in your
+tests.
 
 ## Installation
 
@@ -64,12 +66,7 @@ public class InjectBrowserTests {
 * [BrowserContext](https://playwright.dev/java/docs/api/class-browsercontext)
 * [Page](https://playwright.dev/java/docs/api/class-page)
 
-### Examples
-
-Please take a look at the tests located int `src/test/java/io/github/uchagani/jp` for more information on how to create
-configs and create tests.
-
-### Running tests in parallel
+## Running tests in parallel
 
 `playwright-junit` makes it easy to run tests in parallel. Each test will get an isolated Playwright environment. All
 you have to do is enable parallel tests in junit. The easiest way to do this is to create a file in your classpath
@@ -86,7 +83,12 @@ You can read more about running junit tests in parallel
 in [their documentation](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parallel-execution). With the
 above configuration tests in the same class will be run in parallel.
 
-### Advanced
+## Examples
+
+Please take a look at the tests located int `src/test/java/io/github/uchagani/jp` for more information on how to create
+configs and create tests.
+
+## Advanced
 
 You can override the config for a particular test method by adding the `@InjectPlaywright` annotation over a test
 method:
@@ -108,6 +110,7 @@ public class InjectBrowserTests {
 }
 ```
 
-
-
-
+## Requirements
+* Java 8+
+* Playwright 1.18.0+
+* JUnit 5.6+
