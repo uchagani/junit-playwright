@@ -109,3 +109,8 @@ public class InjectBrowserTests {
     }
 }
 ```
+
+## Requirements
+* Java 8+
+* Playwright 1.18.0+
+* JUnit 5.6+
