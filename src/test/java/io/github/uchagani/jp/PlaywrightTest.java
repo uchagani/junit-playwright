@@ -11,12 +11,12 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 // This needs to be run serially until https://github.com/microsoft/playwright-java/issues/878 is fixed
 @Tag("playwrightCreate")
 @Execution(ExecutionMode.SAME_THREAD)
-public class InjectPlaywrightTest {
+public class PlaywrightTest {
     @Test
     void injectPlaywrightTestRunsSuccessfully() {
         EngineTestKit
                 .engine("junit-jupiter")
-                .selectors(selectClass(InjectPlaywrightTestCase.class))
+                .selectors(selectClass(PlaywrightTestCase.class))
                 .execute()
                 .testEvents()
                 .assertStatistics(stat -> stat.succeeded(1));
@@ -26,7 +26,7 @@ public class InjectPlaywrightTest {
     void injectPlaywrightWithOptionsTestRunsFails() {
         EngineTestKit
                 .engine("junit-jupiter")
-                .selectors(selectClass(InjectPlaywrightWithOptionsTestCase.class))
+                .selectors(selectClass(PlaywrightWithOptionsTestCase.class))
                 .execute()
                 .testEvents()
                 .assertStatistics(stat -> stat.failed(1));

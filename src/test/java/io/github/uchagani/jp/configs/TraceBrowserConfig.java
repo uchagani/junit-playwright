@@ -1,9 +1,9 @@
 package io.github.uchagani.jp.configs;
 
 import io.github.uchagani.jp.BrowserConfig;
-import io.github.uchagani.jp.PlaywrightConfig;
+import io.github.uchagani.jp.PlaywrightBrowserConfig;
 
-public class TraceConfig implements PlaywrightConfig {
+public class TraceBrowserConfig implements PlaywrightBrowserConfig {
     @Override
     public BrowserConfig getBrowserConfig() {
         return new BrowserConfig()

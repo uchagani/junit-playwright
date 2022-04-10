@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @ExtendWith({PlaywrightParameterResolver.class, BrowserParameterResolver.class, BrowserContextParameterResolver.class,
              PageParameterResolver.class, PlaywrightTestWatcher.class})
-public @interface InjectPlaywright {
-    Class<? extends PlaywrightConfig> value() default PlaywrightConfig.class;
+public @interface UseBrowserConfig {
+    Class<? extends PlaywrightBrowserConfig> value();
 }

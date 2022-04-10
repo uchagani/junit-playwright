@@ -1,5 +1,5 @@
 package io.github.uchagani.jp;
 
-public interface PlaywrightConfig {
+public interface PlaywrightBrowserConfig {
     BrowserConfig getBrowserConfig();
 }

@@ -8,28 +8,24 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import static io.github.uchagani.jp.AnnotationUtils.isAnnotationPresentOnClassOrMethod;
+import static io.github.uchagani.jp.ExtensionUtils.*;
+
 public class BrowserContextParameterResolver implements ParameterResolver {
-    private static final String browserContextId = ".browserContext.";
+    private static final String id = ".browserContext.";
 
     public static BrowserContext getBrowserContext(ExtensionContext extensionContext) {
-        String id = extensionContext.getUniqueId() + browserContextId;
-        BrowserContext browserContext = extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).get(id, BrowserContext.class);
+        BrowserContext browserContext = getObjectFromStore(extensionContext, id, BrowserContext.class);
 
         if (browserContext == null) {
             Browser browser = BrowserParameterResolver.getBrowser(extensionContext);
-            BrowserConfig browserConfig = PlaywrightParameterResolver.getPlaywrightConfig(extensionContext).getBrowserConfig();
+            BrowserConfig browserConfig = getBrowserConfig(extensionContext);
 
             if (browserConfig.getCreateMethod() == BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT) {
                 return getBrowserContext(extensionContext);
             }
 
-            Browser.NewContextOptions newContextOptions = browserConfig.getNewContextOptions();
-
-            if (newContextOptions == null) {
-                browserContext = browser.newContext();
-            } else {
-                browserContext = browser.newContext(newContextOptions);
-            }
+            browserContext = createBrowserContext(browser, browserConfig);
 
             if (browserConfig.getEnableTracing()) {
                 browserContext.tracing().start(getTraceStartOptions());
@@ -42,25 +38,32 @@ public class BrowserContextParameterResolver implements ParameterResolver {
     }
 
     public static void saveBrowserContextInStore(ExtensionContext extensionContext, BrowserContext browserContext) {
-        extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).put(extensionContext.getUniqueId() + browserContextId, browserContext);
+        saveObjectInStore(extensionContext, id, browserContext);
+    }
+
+    private static BrowserContext createBrowserContext(Browser browser, BrowserConfig config) {
+        Browser.NewContextOptions newContextOptions = config.getNewContextOptions();
+        if (newContextOptions == null) {
+            return browser.newContext();
+        } else {
+            return browser.newContext(newContextOptions);
+        }
     }
 
     private static Tracing.StartOptions getTraceStartOptions() {
         Tracing.StartOptions startOptions = new Tracing.StartOptions()
                 .setSnapshots(true)
                 .setScreenshots(true);
-
         if (System.getenv("PLAYWRIGHT_JAVA_SRC") != null) {
             startOptions.setSources(true);
         }
-
         return startOptions;
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Class<?> parameterType = parameterContext.getParameter().getType();
-        return PlaywrightParameterResolver.injectPlaywrightAnnotationPresent(extensionContext) && parameterType.equals(BrowserContext.class);
+        return isAnnotationPresentOnClassOrMethod(extensionContext, UseBrowserConfig.class) && parameterType.equals(BrowserContext.class);
     }
 
     @Override

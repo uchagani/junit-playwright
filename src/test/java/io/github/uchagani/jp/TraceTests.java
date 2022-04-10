@@ -27,7 +27,7 @@ public class TraceTests {
                 .filter(m -> m.isAnnotationPresent(Test.class)).collect(Collectors.toList());
 
         for (Method test : testMethods) {
-            BrowserConfig config = getBrowserConfig(test.getAnnotation(InjectPlaywright.class).value());
+            BrowserConfig config = getBrowserConfig(test.getAnnotation(UseBrowserConfig.class).value());
             Path outputDir = config.getOutputDirectory();
 
             if (test.getName().endsWith("isCreated")) {
@@ -42,7 +42,7 @@ public class TraceTests {
         return "glob:**" + TraceTestCase.class.getName() + "." + testName + ".zip";
     }
 
-    private BrowserConfig getBrowserConfig(Class<? extends PlaywrightConfig> clazz) {
+    private BrowserConfig getBrowserConfig(Class<? extends PlaywrightBrowserConfig> clazz) {
         try {
             return clazz.getConstructor().newInstance().getBrowserConfig();
         } catch (Exception ex) {

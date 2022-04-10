@@ -1,9 +1,9 @@
 package io.github.uchagani.jp;
 
 import com.microsoft.playwright.Page;
-import io.github.uchagani.jp.configs.TraceConfig;
-import io.github.uchagani.jp.configs.TraceConfigAlternateOutputDir;
-import io.github.uchagani.jp.configs.TraceConfigSaveOnlyOnFailure;
+import io.github.uchagani.jp.configs.TraceBrowserConfig;
+import io.github.uchagani.jp.configs.TraceBrowserConfigAlternateOutputDir;
+import io.github.uchagani.jp.configs.TraceBrowserConfigSaveOnlyOnFailure;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -39,45 +39,45 @@ public class TraceTestCase {
     }
 
     @Test
-    @InjectPlaywright(TraceConfig.class)
+    @UseBrowserConfig(TraceBrowserConfig.class)
     public void traceFile_alwaysCreate_onPass_isCreated(Page ignored) {
         //force pass
         return;
     }
 
     @Test
-    @InjectPlaywright(TraceConfig.class)
+    @UseBrowserConfig(TraceBrowserConfig.class)
     public void traceFile_alwaysCreate_onFail_isCreated(Page ignored) {
         fail("force fail");
     }
 
     @Test
-    @InjectPlaywright(TraceConfig.class)
+    @UseBrowserConfig(TraceBrowserConfig.class)
     public void traceFile_alwaysCreate_onAbort_isCreated(Page ignored) {
         assumeThat(true).isEqualTo(false);
     }
 
     @Test
-    @InjectPlaywright(TraceConfigSaveOnlyOnFailure.class)
+    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
     public void traceFile_onPass_isNotCreated(Page ignored) {
         //force pass
         return;
     }
 
     @Test
-    @InjectPlaywright(TraceConfigSaveOnlyOnFailure.class)
+    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
     public void traceFile_onAbort_isNotCreated(Page ignored) {
         assumeThat(true).isEqualTo(false);
     }
 
     @Test
-    @InjectPlaywright(TraceConfigSaveOnlyOnFailure.class)
+    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
     public void traceFile_onFail_isCreated(Page ignored) {
         fail("force fail");
     }
 
     @Test
-    @InjectPlaywright(TraceConfigAlternateOutputDir.class)
+    @UseBrowserConfig(TraceBrowserConfigAlternateOutputDir.class)
     public void traceFile_inAlternateDir_isCreated(Page ignored) {
         //force pass
         return;

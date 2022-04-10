@@ -1,13 +1,7 @@
 package io.github.uchagani.jp.testExtension;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
-import io.github.uchagani.jp.BrowserContextParameterResolver;
-import io.github.uchagani.jp.BrowserParameterResolver;
-import io.github.uchagani.jp.PageParameterResolver;
-import io.github.uchagani.jp.PlaywrightParameterResolver;
+import com.microsoft.playwright.*;
+import io.github.uchagani.jp.*;
 import org.junit.jupiter.api.extension.*;
 
 public class TestObjectParameterResolver implements ParameterResolver {
@@ -23,7 +17,8 @@ public class TestObjectParameterResolver implements ParameterResolver {
         Browser browser = BrowserParameterResolver.getBrowser(extensionContext);
         BrowserContext browserContext = BrowserContextParameterResolver.getBrowserContext(extensionContext);
         Page page = PageParameterResolver.getPage(extensionContext);
+        APIRequestContext apiRequestContext = APIRequestContextParameterResolver.getAPIRequestContext(extensionContext);
 
-        return new TestObject(playwright, browser, browserContext, page);
+        return new TestObject(playwright, browser, browserContext, page, apiRequestContext);
     }
 }

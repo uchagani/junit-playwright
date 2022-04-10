@@ -1,11 +1,11 @@
 package io.github.uchagani.jp.configs;
 
 import io.github.uchagani.jp.BrowserConfig;
-import io.github.uchagani.jp.PlaywrightConfig;
+import io.github.uchagani.jp.PlaywrightBrowserConfig;
 
 import java.nio.file.Paths;
 
-public class TraceConfigAlternateOutputDir implements PlaywrightConfig {
+public class TraceBrowserConfigAlternateOutputDir implements PlaywrightBrowserConfig {
     @Override
     public BrowserConfig getBrowserConfig() {
         return new BrowserConfig()
