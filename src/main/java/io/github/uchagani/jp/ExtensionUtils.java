@@ -1,10 +1,12 @@
 package io.github.uchagani.jp;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
 
 import java.lang.reflect.InvocationTargetException;
 
 import static io.github.uchagani.jp.AnnotationUtils.ensureAnnotationIsPresentOnClassOrMethod;
+import static io.github.uchagani.jp.AnnotationUtils.ensureAnnotationIsPresentOnClassOrMethodOrParameter;
 
 public class ExtensionUtils {
     static final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(JunitPlaywright.class);
@@ -17,16 +19,19 @@ public class ExtensionUtils {
         return extensionContext.getStore(namespace).get(extensionContext.getUniqueId() + id, objectType);
     }
 
-    static RestConfig getRestConfig(ExtensionContext extensionContext) {
-        ensureAnnotationIsPresentOnClassOrMethod(extensionContext, UseRestConfig.class);
+    static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        ensureAnnotationIsPresentOnClassOrMethodOrParameter(parameterContext, extensionContext, UseRestConfig.class);
         Class<? extends PlaywrightRestConfig> configClass;
 
         try {
-            configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
+            configClass = parameterContext.getParameter().getAnnotation(UseRestConfig.class).value();
         } catch (NullPointerException ignored) {
-            configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
+            try {
+                configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
+            } catch (NullPointerException ignored1) {
+                configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
+            }
         }
-
         return createInstanceOfConfig(configClass).getRestConfig();
     }
 

@@ -24,7 +24,7 @@ public class PlaywrightParameterResolver implements ParameterResolver {
     }
 
     static void closePlaywright(ExtensionContext extensionContext) {
-        Playwright playwright = getPlaywright(extensionContext);
+        Playwright playwright = getObjectFromStore(extensionContext, id, Playwright.class);
         if (playwright != null) {
             playwright.close();
         }

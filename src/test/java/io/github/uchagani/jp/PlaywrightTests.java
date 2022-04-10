@@ -11,7 +11,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 // This needs to be run serially until https://github.com/microsoft/playwright-java/issues/878 is fixed
 @Tag("playwrightCreate")
 @Execution(ExecutionMode.SAME_THREAD)
-public class PlaywrightTest {
+public class PlaywrightTests {
     @Test
     void injectPlaywrightTestRunsSuccessfully() {
         EngineTestKit

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static io.github.uchagani.jp.APIRequestContextParameterResolver.closeAPIRequestContext;
 import static io.github.uchagani.jp.ExtensionUtils.getBrowserConfig;
 import static io.github.uchagani.jp.PlaywrightParameterResolver.closePlaywright;
 
@@ -20,7 +21,7 @@ public class PlaywrightTestWatcher implements TestWatcher {
                 stopTrace(extensionContext);
             }
         }
-        closePlaywright(extensionContext);
+        cleanup(extensionContext);
     }
 
     @Override
@@ -31,7 +32,7 @@ public class PlaywrightTestWatcher implements TestWatcher {
                 stopTrace(extensionContext);
             }
         }
-        closePlaywright(extensionContext);
+        cleanup(extensionContext);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class PlaywrightTestWatcher implements TestWatcher {
         if (browserConfig.getEnableTracing()) {
             stopTrace(extensionContext);
         }
-        closePlaywright(extensionContext);
+        cleanup(extensionContext);
     }
 
     private void stopTrace(ExtensionContext extensionContext) {
@@ -53,5 +54,10 @@ public class PlaywrightTestWatcher implements TestWatcher {
 
     private String getSafeTestName(ExtensionContext extensionContext) {
         return String.format("%s.%s.zip", extensionContext.getRequiredTestClass().getName(), extensionContext.getRequiredTestMethod().getName());
+    }
+
+    private void cleanup(ExtensionContext extensionContext) {
+        closeAPIRequestContext(extensionContext);
+        closePlaywright(extensionContext);
     }
 }

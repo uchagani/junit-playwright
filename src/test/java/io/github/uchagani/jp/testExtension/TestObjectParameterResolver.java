@@ -17,7 +17,7 @@ public class TestObjectParameterResolver implements ParameterResolver {
         Browser browser = BrowserParameterResolver.getBrowser(extensionContext);
         BrowserContext browserContext = BrowserContextParameterResolver.getBrowserContext(extensionContext);
         Page page = PageParameterResolver.getPage(extensionContext);
-        APIRequestContext apiRequestContext = APIRequestContextParameterResolver.getAPIRequestContext(extensionContext);
+        APIRequestContext apiRequestContext = APIRequestContextParameterResolver.getAPIRequestContext(parameterContext, extensionContext);
 
         return new TestObject(playwright, browser, browserContext, page, apiRequestContext);
     }

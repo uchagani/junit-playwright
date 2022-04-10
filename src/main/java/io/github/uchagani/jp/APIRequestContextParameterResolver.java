@@ -18,19 +18,35 @@ public class APIRequestContextParameterResolver implements ParameterResolver {
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Class<?> parameterType = parameterContext.getParameter().getType();
-        return isAnnotationPresentOnClassOrMethod(extensionContext, UseRestConfig.class) && parameterType.equals(APIRequestContext.class);
+        return parameterType.equals(APIRequestContext.class) && (parameterContext.isAnnotated(UseRestConfig.class)
+                || isAnnotationPresentOnClassOrMethod(extensionContext, UseRestConfig.class));
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getAPIRequestContext(extensionContext);
+        return getAPIRequestContext(parameterContext, extensionContext);
     }
 
-    public static APIRequestContext getAPIRequestContext(ExtensionContext extensionContext) {
+    public static void closeAPIRequestContext(ExtensionContext extensionContext) {
+        APIRequestContext apiRequestContext = getObjectFromStore(extensionContext, id, APIRequestContext.class);
+        if (apiRequestContext != null) {
+            apiRequestContext.dispose();
+        }
+    }
+
+    public static Playwright getPlaywright(ExtensionContext extensionContext) {
+        try {
+            return PlaywrightParameterResolver.getPlaywright(extensionContext);
+        } catch (Exception ex) {
+            return Playwright.create();
+        }
+    }
+
+    public static APIRequestContext getAPIRequestContext(ParameterContext parameterContext, ExtensionContext extensionContext) {
         APIRequestContext apiRequestContext = getObjectFromStore(extensionContext, id, APIRequestContext.class);
         if (apiRequestContext == null) {
-            RestConfig restConfig = getRestConfig(extensionContext);
-            Playwright playwright = PlaywrightParameterResolver.getPlaywright(extensionContext);
+            RestConfig restConfig = getRestConfig(parameterContext, extensionContext);
+            Playwright playwright = getPlaywright(extensionContext);
             return createAPIRequestContext(playwright, restConfig);
         }
         return apiRequestContext;
