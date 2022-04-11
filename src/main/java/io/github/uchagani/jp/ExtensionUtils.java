@@ -27,8 +27,13 @@ public class ExtensionUtils {
             } catch (NullPointerException ignored1) {
                 try {
                     configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
-                } catch (NullPointerException ignored2) {
-                    configClass = EmptyRestConfig.class;
+                } catch (NullPointerException npe) {
+                    if (parameterContext == null) {
+                        // This should only happen when this method is called from another extension
+                        configClass = EmptyRestConfig.class;
+                    } else {
+                        throw npe;
+                    }
                 }
             }
         }
