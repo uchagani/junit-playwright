@@ -7,13 +7,17 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import static io.github.uchagani.jp.AnnotationUtils.isAnnotationPresentOnClassOrMethod;
+import static io.github.uchagani.jp.ExtensionUtils.getObjectFromStore;
+import static io.github.uchagani.jp.ExtensionUtils.saveObjectInStore;
+
 public class PageParameterResolver implements ParameterResolver {
-    private static final String pageId = ".page.";
+    private static final String id = ".page.";
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Class<?> parameterType = parameterContext.getParameter().getType();
-        return PlaywrightParameterResolver.injectPlaywrightAnnotationPresent(extensionContext) && parameterType.equals(Page.class);
+        return isAnnotationPresentOnClassOrMethod(extensionContext, UseBrowserConfig.class) && parameterType.equals(Page.class);
     }
 
     @Override
@@ -22,19 +26,16 @@ public class PageParameterResolver implements ParameterResolver {
     }
 
     public static Page getPage(ExtensionContext extensionContext) {
-        String id = extensionContext.getUniqueId() + pageId;
-        Page page = extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).get(id, Page.class);
-
+        Page page = getObjectFromStore(extensionContext, id, Page.class);
         if (page == null) {
             BrowserContext browserContext = BrowserContextParameterResolver.getBrowserContext(extensionContext);
             page = browserContext.newPage();
             savePageInStore(extensionContext, page);
         }
-
         return page;
     }
 
     public static void savePageInStore(ExtensionContext extensionContext, Page page) {
-        extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).put(extensionContext.getUniqueId() + pageId, page);
+        saveObjectInStore(extensionContext, id, page);
     }
 }

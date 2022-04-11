@@ -9,13 +9,22 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import static io.github.uchagani.jp.AnnotationUtils.isAnnotationPresentOnClassOrMethod;
+import static io.github.uchagani.jp.ExtensionUtils.*;
+
 public class BrowserParameterResolver implements ParameterResolver {
-    static final String browserId = ".browser.";
+    static final String id = ".browser.";
+    static final Map<BrowserChoice, BrowserType> browserChoiceMap = new HashMap<>();
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         Class<?> parameterType = parameterContext.getParameter().getType();
-        return PlaywrightParameterResolver.injectPlaywrightAnnotationPresent(extensionContext) && parameterType.equals(Browser.class);
+        return isAnnotationPresentOnClassOrMethod(extensionContext, UseBrowserConfig.class) && parameterType.equals(Browser.class);
     }
 
     @Override
@@ -23,74 +32,83 @@ public class BrowserParameterResolver implements ParameterResolver {
         return getBrowser(extensionContext);
     }
 
-    public static Browser getBrowser(ExtensionContext extensionContext) {
-        String id = extensionContext.getUniqueId() + browserId;
-        Browser browser = extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).get(id, Browser.class);
+    private static BrowserType getBrowserType(BrowserChoice browserChoice, Playwright playwright) {
+        switch (browserChoice) {
+            case CHROMIUM:
+                return playwright.chromium();
+            case FIREFOX:
+                return playwright.firefox();
+            case WEBKIT:
+                return playwright.webkit();
+            default:
+                throw new RuntimeException("Unknown BrowserChoice");
+        }
+    }
 
+    private static Browser launch(BrowserType browserType, BrowserType.LaunchOptions options) {
+        if (options == null) {
+            return browserType.launch();
+        } else {
+            return browserType.launch(options);
+        }
+    }
+
+    private static Browser connect(BrowserType browserType, String wsEndpoint, BrowserType.ConnectOptions options) {
+        if (options == null) {
+            return browserType.connect(wsEndpoint);
+        } else {
+            return browserType.connect(wsEndpoint, options);
+        }
+    }
+
+    private static Browser connectOverCDP(BrowserType browserType, String wsEndpointUrl, BrowserType.ConnectOverCDPOptions options) {
+        if (options == null) {
+            return browserType.connectOverCDP(wsEndpointUrl);
+        } else {
+            return browserType.connectOverCDP(wsEndpointUrl, options);
+        }
+    }
+
+    private static BrowserContext launchPersistentContext(BrowserType browserType, Path userDir, BrowserType.LaunchPersistentContextOptions options) {
+        if (options == null) {
+            return browserType.launchPersistentContext(userDir);
+        } else {
+            return browserType.launchPersistentContext(userDir, options);
+        }
+    }
+
+    private static Browser createBrowser(BrowserConfig config, BrowserType browserType) {
+        switch (config.getCreateMethod()) {
+            case LAUNCH:
+                return launch(browserType, config.getLaunchOptions());
+            case CONNECT:
+                return connect(browserType, config.getWsEndpoint(), config.getConnectOptions());
+            case CONNECT_OVER_CDP:
+                return connectOverCDP(browserType, config.getEndpointUrl(), config.getConnectOverCDPOptions());
+            case LAUNCH_PERSISTENT_CONTEXT:
+                BrowserContext browserContext = launchPersistentContext(browserType, config.getUserDataDir(), config.getLaunchPersistentContextOptions());
+                return browserContext.browser();
+            default:
+                throw new RuntimeException("Unknown BrowserCreateMethod");
+        }
+    }
+
+    public static Browser getBrowser(ExtensionContext extensionContext) {
+        Browser browser = getObjectFromStore(extensionContext, id, Browser.class);
         if (browser == null) {
             Playwright playwright = PlaywrightParameterResolver.getPlaywright(extensionContext);
-            BrowserConfig config = PlaywrightParameterResolver.getPlaywrightConfig(extensionContext).getBrowserConfig();
-            BrowserChoice browserChoice = config.getBrowser();
-            BrowserCreateMethod browserCreateMethod = config.getCreateMethod();
-            BrowserType browserType = null;
-
-            switch (browserChoice) {
-                case CHROMIUM:
-                    browserType = playwright.chromium();
-                    break;
-                case FIREFOX:
-                    browserType = playwright.firefox();
-                    break;
-                case WEBKIT:
-                    browserType = playwright.webkit();
-                    break;
-            }
-
-            switch (browserCreateMethod) {
-                case LAUNCH:
-                    BrowserType.LaunchOptions launchOptions = config.getLaunchOptions();
-                    if (launchOptions == null) {
-                        browser = browserType.launch();
-                    } else {
-                        browser = browserType.launch(launchOptions);
-                    }
-                    break;
-                case CONNECT:
-                    BrowserType.ConnectOptions connectOptions = config.getConnectOptions();
-                    if (connectOptions == null) {
-                        browser = browserType.connect(config.getWsEndpoint());
-                    } else {
-                        browser = browserType.connect(config.getWsEndpoint(), connectOptions);
-                    }
-                    break;
-                case CONNECT_OVER_CDP:
-                    BrowserType.ConnectOverCDPOptions connectOverCDPOptions = config.getConnectOverCDPOptions();
-                    if (connectOverCDPOptions == null) {
-                        browser = browserType.connectOverCDP(config.getEndpointUrl());
-                    } else {
-                        browser = browserType.connectOverCDP(config.getEndpointUrl(), connectOverCDPOptions);
-                    }
-                    break;
-                case LAUNCH_PERSISTENT_CONTEXT:
-                    BrowserType.LaunchPersistentContextOptions launchPersistentContextOptions = config.getLaunchPersistentContextOptions();
-                    BrowserContext browserContext;
-                    if (launchPersistentContextOptions == null) {
-                        browserContext = browserType.launchPersistentContext(config.getUserDataDir());
-                    } else {
-                        browserContext = browserType.launchPersistentContext(config.getUserDataDir(), launchPersistentContextOptions);
-                    }
-                    browser = browserContext.browser();
-                    BrowserContextParameterResolver.saveBrowserContextInStore(extensionContext, browserContext);
-                    break;
-            }
-
+            BrowserConfig config = getBrowserConfig(extensionContext);
+            BrowserType browserType = getBrowserType(config.getBrowser(), playwright);
+            browser = createBrowser(config, browserType);
             saveBrowserInStore(extensionContext, browser);
+            if (config.getCreateMethod().equals(BrowserCreateMethod.LAUNCH_PERSISTENT_CONTEXT)) {
+                BrowserContextParameterResolver.saveBrowserContextInStore(extensionContext, browser.contexts().get(0));
+            }
         }
-
         return browser;
     }
 
     public static void saveBrowserInStore(ExtensionContext extensionContext, Browser browser) {
-        extensionContext.getStore(PlaywrightParameterResolver.junitPlaywrightNamespace).put(extensionContext.getUniqueId() + browserId, browser);
+        saveObjectInStore(extensionContext, id, browser);
     }
 }

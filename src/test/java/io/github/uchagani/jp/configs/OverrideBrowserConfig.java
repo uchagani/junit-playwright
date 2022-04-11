@@ -2,9 +2,9 @@ package io.github.uchagani.jp.configs;
 
 import com.microsoft.playwright.Browser;
 import io.github.uchagani.jp.BrowserConfig;
-import io.github.uchagani.jp.PlaywrightConfig;
+import io.github.uchagani.jp.PlaywrightBrowserConfig;
 
-public class OverrideConfig implements PlaywrightConfig {
+public class OverrideBrowserConfig implements PlaywrightBrowserConfig {
 
     @Override
     public BrowserConfig getBrowserConfig() {

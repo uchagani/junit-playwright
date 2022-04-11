@@ -2,14 +2,14 @@ package io.github.uchagani.jp;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
-import io.github.uchagani.jp.configs.DefaultConfig;
-import io.github.uchagani.jp.configs.OverrideConfig;
+import io.github.uchagani.jp.configs.DefaultBrowserConfig;
+import io.github.uchagani.jp.configs.OverrideBrowserConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@InjectPlaywright(DefaultConfig.class)
-public class InjectBrowserContextAndPageTests {
+@UseBrowserConfig(DefaultBrowserConfig.class)
+public class BrowserContextAndPageTests {
 
     @Test
     public void shouldInjectBrowserContextDefinedAtClassLevel(BrowserContext browserContext, Page page) {
@@ -23,7 +23,7 @@ public class InjectBrowserContextAndPageTests {
     }
 
     @Test
-    @InjectPlaywright(OverrideConfig.class)
+    @UseBrowserConfig(OverrideBrowserConfig.class)
     public void shouldInjectBrowserDefinedAtTestLevel(BrowserContext browserContext, Page page) {
         assertThat(browserContext).isNotNull();
         assertThat(page).isNotNull();
