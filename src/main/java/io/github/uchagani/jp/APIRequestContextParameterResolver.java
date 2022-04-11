@@ -9,8 +9,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 import static io.github.uchagani.jp.AnnotationUtils.isAnnotationPresentOnClassOrMethod;
-import static io.github.uchagani.jp.ExtensionUtils.getObjectFromStore;
-import static io.github.uchagani.jp.ExtensionUtils.getRestConfig;
+import static io.github.uchagani.jp.ExtensionUtils.*;
 
 public class APIRequestContextParameterResolver implements ParameterResolver {
     private static final String id = ".apiRequestContext.";
@@ -34,11 +33,13 @@ public class APIRequestContextParameterResolver implements ParameterResolver {
         }
     }
 
-    public static Playwright getPlaywright(ExtensionContext extensionContext) {
+    private static Playwright getPlaywright(ExtensionContext extensionContext) {
         try {
             return PlaywrightParameterResolver.getPlaywright(extensionContext);
         } catch (Exception ex) {
-            return Playwright.create();
+            Playwright playwright = Playwright.create();
+            PlaywrightParameterResolver.savePlaywrightInStore(extensionContext, playwright);
+            return playwright;
         }
     }
 
@@ -47,9 +48,14 @@ public class APIRequestContextParameterResolver implements ParameterResolver {
         if (apiRequestContext == null) {
             RestConfig restConfig = getRestConfig(parameterContext, extensionContext);
             Playwright playwright = getPlaywright(extensionContext);
-            return createAPIRequestContext(playwright, restConfig);
+            apiRequestContext = createAPIRequestContext(playwright, restConfig);
+            saveAPIRequestContextInStore(extensionContext, apiRequestContext);
         }
         return apiRequestContext;
+    }
+
+    public static void saveAPIRequestContextInStore(ExtensionContext extensionContext, APIRequestContext apiRequestContext) {
+        saveObjectInStore(extensionContext, id, apiRequestContext);
     }
 
     private static APIRequestContext createAPIRequestContext(Playwright playwright, RestConfig restConfig) {
