@@ -5,9 +5,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static io.github.uchagani.jp.AnnotationUtils.ensureAnnotationIsPresentOnClassOrMethod;
-import static io.github.uchagani.jp.AnnotationUtils.ensureAnnotationIsPresentOnClassOrMethodOrParameter;
-
 public class ExtensionUtils {
     static final ExtensionContext.Namespace namespace = ExtensionContext.Namespace.create(JunitPlaywright.class);
 
@@ -19,8 +16,7 @@ public class ExtensionUtils {
         return extensionContext.getStore(namespace).get(extensionContext.getUniqueId() + id, objectType);
     }
 
-    static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        ensureAnnotationIsPresentOnClassOrMethodOrParameter(parameterContext, extensionContext, UseRestConfig.class);
+    public static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<? extends PlaywrightRestConfig> configClass;
 
         try {
@@ -35,8 +31,7 @@ public class ExtensionUtils {
         return createInstanceOfConfig(configClass).getRestConfig();
     }
 
-    static BrowserConfig getBrowserConfig(ExtensionContext extensionContext) {
-        ensureAnnotationIsPresentOnClassOrMethod(extensionContext, UseBrowserConfig.class);
+    public static BrowserConfig getBrowserConfig(ExtensionContext extensionContext) {
         Class<? extends PlaywrightBrowserConfig> configClass;
 
         try {
@@ -56,6 +51,4 @@ public class ExtensionUtils {
             throw new RuntimeException(message, ex);
         }
     }
-
-
 }
