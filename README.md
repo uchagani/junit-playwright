@@ -96,7 +96,8 @@ public class APIRequestContextTests {
 }
 ```
 
-`@UseRestConfig` annotation can be used either at the class level, method level, or parameter level.
+`@UseBrowserConfig` annotation can be used either at the class level, method level.  
+`@UseRestConfig` annotation can be used either at the class level, method leve, or parameter level.
 
 ## Running tests in parallel
 
@@ -125,6 +126,8 @@ configs and create tests.
 You can override the config for a particular test method by adding the `@UseBrowserConfig` annotation over a test
 method:
 
+### Overriding config
+
 ```java
 
 @UseBrowserConfig(DefaultConfig.class)
@@ -142,6 +145,22 @@ public class InjectBrowserTests {
 }
 ```
 
+### Testing multiple APIs in one test
+
+```java
+@Test
+public void useDifferentConfigsInTheSameTest(@UseRestConfig(
+        SpecificRestConfig.class) APIRequestContext specificRequest, @UseRestConfig(
+        OverrideRestConfig.class) APIRequestContext overrideRequest) {
+    
+    assertThat(specificRequest).isNotNull();
+    assertThat(overrideRequest).isNotNull();
+    assertThat(specificRequest.get("/foo").url()).contains("google.com/foo");
+    assertThat(overrideRequest.get("/foo").url()).contains("bing.com/foo");
+}
+```
+
+
 ## Requirements
 
 * Java 8+
@@ -153,4 +172,4 @@ public class InjectBrowserTests {
 To migrate to v2.x from v1.x, there are a couple of changes that you need to make:
 
 1.  Change `PlaywrightConfig` to `PlaywrightBrowserConfig`.
-2.  Change `@InjectPlaywright` to `@UserBrowserConfig`.
+2.  Change `@InjectPlaywright` to `@UseBrowserConfig`.

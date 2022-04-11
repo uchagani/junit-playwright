@@ -25,10 +25,12 @@ public class APIRequestContextTests {
     }
 
     @Test
-    @UseRestConfig(OverrideRestConfig.class) //this should not be used but is here just to ensure it isn't used
     public void shouldInjectAPIRequestContextDefinedAtParameterLevel(@UseRestConfig(
-            SpecificRestConfig.class) APIRequestContext request) {
-        assertThat(request).isNotNull();
-        assertThat(request.get("/foo").url()).contains("google.com/foo");
+            SpecificRestConfig.class) APIRequestContext specificRequest, @UseRestConfig(
+            OverrideRestConfig.class) APIRequestContext overrideRequest) {
+        assertThat(specificRequest).isNotNull();
+        assertThat(overrideRequest).isNotNull();
+        assertThat(specificRequest.get("/foo").url()).contains("google.com/foo");
+        assertThat(overrideRequest.get("/foo").url()).contains("bing.com/foo");
     }
 }

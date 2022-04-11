@@ -44,16 +44,12 @@ public class APIRequestContextParameterResolver implements ParameterResolver {
     }
 
     public static APIRequestContext getAPIRequestContext(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        APIRequestContext apiRequestContext = getObjectFromStore(extensionContext, id, APIRequestContext.class);
-        if (apiRequestContext == null) {
-            RestConfig restConfig = getRestConfig(parameterContext, extensionContext);
-            Playwright playwright = getPlaywright(extensionContext);
-            apiRequestContext = createAPIRequestContext(playwright, restConfig);
-            saveAPIRequestContextInStore(extensionContext, apiRequestContext);
-        }
-        return apiRequestContext;
+        RestConfig restConfig = getRestConfig(parameterContext, extensionContext);
+        Playwright playwright = getPlaywright(extensionContext);
+        return createAPIRequestContext(playwright, restConfig);
     }
 
+    @SuppressWarnings("unused")
     public static void saveAPIRequestContextInStore(ExtensionContext extensionContext, APIRequestContext apiRequestContext) {
         saveObjectInStore(extensionContext, id, apiRequestContext);
     }
