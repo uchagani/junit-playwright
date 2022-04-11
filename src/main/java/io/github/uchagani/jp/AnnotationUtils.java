@@ -19,8 +19,13 @@ public class AnnotationUtils {
     }
 
     static void ensureAnnotationIsPresentOnClassOrMethodOrParameter(ParameterContext parameterContext, ExtensionContext extensionContext, Class<? extends Annotation> annotation) {
-        if (!isAnnotationPresentOnClassOrMethod(extensionContext, annotation) && !parameterContext.isAnnotated(annotation)) {
-            String message = String.format("Class or Method or Parameter is not annotated with %s", annotation.getName());
+        if (!isAnnotationPresentOnClassOrMethod(extensionContext, annotation)) {
+            String message = String.format("Class or Method is not annotated with %s", annotation.getName());
+            throw new RuntimeException(message);
+        }
+
+        if (parameterContext != null && !parameterContext.isAnnotated(annotation)) {
+            String message = String.format("Class or Method is not annotated with %s", annotation.getName());
             throw new RuntimeException(message);
         }
     }

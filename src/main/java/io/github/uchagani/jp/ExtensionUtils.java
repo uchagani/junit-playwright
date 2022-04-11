@@ -19,7 +19,7 @@ public class ExtensionUtils {
         return extensionContext.getStore(namespace).get(extensionContext.getUniqueId() + id, objectType);
     }
 
-    static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
+    public static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
         ensureAnnotationIsPresentOnClassOrMethodOrParameter(parameterContext, extensionContext, UseRestConfig.class);
         Class<? extends PlaywrightRestConfig> configClass;
 
@@ -35,7 +35,7 @@ public class ExtensionUtils {
         return createInstanceOfConfig(configClass).getRestConfig();
     }
 
-    static BrowserConfig getBrowserConfig(ExtensionContext extensionContext) {
+    public static BrowserConfig getBrowserConfig(ExtensionContext extensionContext) {
         ensureAnnotationIsPresentOnClassOrMethod(extensionContext, UseBrowserConfig.class);
         Class<? extends PlaywrightBrowserConfig> configClass;
 
@@ -56,6 +56,4 @@ public class ExtensionUtils {
             throw new RuntimeException(message, ex);
         }
     }
-
-
 }
