@@ -6,7 +6,7 @@
 
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
 
     <name>junit-playwright</name>
     <description>junit-playwright allows you to easily run Playwright-Java tests in parallel</description>
