@@ -5,7 +5,7 @@ import com.microsoft.playwright.APIRequest;
 public class RestConfig {
     private APIRequest.NewContextOptions apiRequestContextOptions;
 
-    APIRequest.NewContextOptions getAPIRequestContextOptions() {
+    public APIRequest.NewContextOptions getAPIRequestContextOptions() {
         return apiRequestContextOptions;
     }
 

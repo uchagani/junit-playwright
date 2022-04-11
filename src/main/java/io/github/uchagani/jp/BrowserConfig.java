@@ -23,7 +23,7 @@ public class BrowserConfig {
     private boolean saveTraceOnlyOnFailure = false;
     private Path outputDirectory = Paths.get("test-results");
 
-    Path getOutputDirectory() {
+    public Path getOutputDirectory() {
         return outputDirectory;
     }
 
@@ -32,11 +32,11 @@ public class BrowserConfig {
         return this;
     }
 
-    boolean getEnableTracing() {
+    public boolean getEnableTracing() {
         return enableTracing;
     }
 
-    boolean getSaveTraceOnlyOnFailure() {
+    public boolean getSaveTraceOnlyOnFailure() {
         return saveTraceOnlyOnFailure;
     }
 
@@ -55,11 +55,11 @@ public class BrowserConfig {
         return this;
     }
 
-    Browser.NewContextOptions getNewContextOptions() {
+    public Browser.NewContextOptions getNewContextOptions() {
         return newContextOptions;
     }
 
-    Playwright.CreateOptions getPlaywrightCreateOptions() {
+    public Playwright.CreateOptions getPlaywrightCreateOptions() {
         return playwrightCreateOptions;
     }
 
@@ -68,7 +68,7 @@ public class BrowserConfig {
         return this;
     }
 
-    BrowserChoice getBrowser() {
+    public BrowserChoice getBrowser() {
         return browser;
     }
 
@@ -87,15 +87,15 @@ public class BrowserConfig {
         return this;
     }
 
-    BrowserCreateMethod getCreateMethod() {
+    public BrowserCreateMethod getCreateMethod() {
         return createMethod;
     }
 
-    String getEndpointUrl() {
+    public String getEndpointUrl() {
         return endpointUrl;
     }
 
-    BrowserType.ConnectOverCDPOptions getConnectOverCDPOptions() {
+    public BrowserType.ConnectOverCDPOptions getConnectOverCDPOptions() {
         return connectOverCDPOptions;
     }
 
@@ -111,11 +111,11 @@ public class BrowserConfig {
         return this;
     }
 
-    String getWsEndpoint() {
+    public String getWsEndpoint() {
         return wsEndpoint;
     }
 
-    BrowserType.ConnectOptions getConnectOptions() {
+    public BrowserType.ConnectOptions getConnectOptions() {
         return connectOptions;
     }
 
@@ -131,7 +131,7 @@ public class BrowserConfig {
         return this;
     }
 
-    BrowserType.LaunchOptions getLaunchOptions() {
+    public BrowserType.LaunchOptions getLaunchOptions() {
         return launchOptions;
     }
 
@@ -146,11 +146,11 @@ public class BrowserConfig {
         return this;
     }
 
-    Path getUserDataDir() {
+    public Path getUserDataDir() {
         return userDataDir;
     }
 
-    BrowserType.LaunchPersistentContextOptions getLaunchPersistentContextOptions() {
+    public BrowserType.LaunchPersistentContextOptions getLaunchPersistentContextOptions() {
         return launchPersistentContextOptions;
     }
 
