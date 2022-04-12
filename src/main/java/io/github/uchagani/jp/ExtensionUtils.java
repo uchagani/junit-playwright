@@ -25,7 +25,16 @@ public class ExtensionUtils {
             try {
                 configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
             } catch (NullPointerException ignored1) {
-                configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
+                try {
+                    configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
+                } catch (NullPointerException npe) {
+                    if (parameterContext == null) {
+                        // This should only happen when this method is called from another extension
+                        configClass = EmptyRestConfig.class;
+                    } else {
+                        throw npe;
+                    }
+                }
             }
         }
         return createInstanceOfConfig(configClass).getRestConfig();
