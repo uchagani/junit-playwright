@@ -21,18 +21,18 @@ public class ExtensionUtils {
 
         try {
             configClass = parameterContext.getParameter().getAnnotation(UseRestConfig.class).value();
-        } catch (NullPointerException ignored) {
+        } catch (Exception ignored) {
             try {
                 configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
-            } catch (NullPointerException ignored1) {
+            } catch (Exception ignored1) {
                 try {
                     configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
-                } catch (NullPointerException npe) {
+                } catch (Exception exception) {
                     if (parameterContext == null) {
                         // This should only happen when this method is called from another extension
                         configClass = EmptyRestConfig.class;
                     } else {
-                        throw npe;
+                        throw exception;
                     }
                 }
             }
@@ -45,7 +45,7 @@ public class ExtensionUtils {
 
         try {
             configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseBrowserConfig.class).value();
-        } catch (NullPointerException ignored) {
+        } catch (Exception ignored) {
             configClass = extensionContext.getRequiredTestClass().getAnnotation(UseBrowserConfig.class).value();
         }
 
