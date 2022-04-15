@@ -17,7 +17,7 @@ public class ExtensionUtils {
     }
 
     public static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        RestConfig config = getObjectFromStore(extensionContext, getRestConfigId(extensionContext), RestConfig.class);
+        RestConfig config = getObjectFromStore(extensionContext, getRestConfigId(parameterContext, extensionContext), RestConfig.class);
 
         if (config == null) {
             Class<? extends PlaywrightRestConfig> configClass;
@@ -38,7 +38,7 @@ public class ExtensionUtils {
     }
 
     public static void saveRestConfigInStore(ExtensionContext extensionContext, RestConfig config) {
-        saveObjectInStore(extensionContext, getRestConfigId(extensionContext), config);
+        saveObjectInStore(extensionContext, getRestConfigId(null, extensionContext), config);
     }
 
     public static void saveBrowserConfigInStore(ExtensionContext extensionContext, BrowserConfig config) {
@@ -73,7 +73,11 @@ public class ExtensionUtils {
         return extensionContext.getUniqueId() + ".browserConfigId.";
     }
 
-    private static String getRestConfigId(ExtensionContext extensionContext) {
-        return extensionContext.getUniqueId() + ".restConfigId.";
+    private static String getRestConfigId(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        String id = ".restConfigId.";
+        if(parameterContext == null) {
+            return extensionContext.getUniqueId() + id;
+        }
+        return extensionContext.getUniqueId() + id + parameterContext.getIndex();
     }
 }
