@@ -17,39 +17,47 @@ public class ExtensionUtils {
     }
 
     public static RestConfig getRestConfig(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        Class<? extends PlaywrightRestConfig> configClass;
+        RestConfig config = getObjectFromStore(extensionContext, getRestConfigId(parameterContext, extensionContext), RestConfig.class);
 
-        try {
-            configClass = parameterContext.getParameter().getAnnotation(UseRestConfig.class).value();
-        } catch (Exception ignored) {
+        if (config == null) {
+            Class<? extends PlaywrightRestConfig> configClass;
             try {
-                configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
-            } catch (Exception ignored1) {
+                configClass = parameterContext.getParameter().getAnnotation(UseRestConfig.class).value();
+            } catch (Exception ignored) {
                 try {
+                    configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseRestConfig.class).value();
+                } catch (Exception ignored1) {
                     configClass = extensionContext.getRequiredTestClass().getAnnotation(UseRestConfig.class).value();
-                } catch (Exception exception) {
-                    if (parameterContext == null) {
-                        // This should only happen when this method is called from another extension
-                        configClass = EmptyRestConfig.class;
-                    } else {
-                        throw exception;
-                    }
                 }
             }
+            config = createInstanceOfConfig(configClass).getRestConfig();
+            saveRestConfigInStore(extensionContext, config);
         }
-        return createInstanceOfConfig(configClass).getRestConfig();
+
+        return config;
+    }
+
+    public static void saveRestConfigInStore(ExtensionContext extensionContext, RestConfig config) {
+        saveObjectInStore(extensionContext, getRestConfigId(null, extensionContext), config);
+    }
+
+    public static void saveBrowserConfigInStore(ExtensionContext extensionContext, BrowserConfig config) {
+        saveObjectInStore(extensionContext, getBrowserConfigId(extensionContext), config);
     }
 
     public static BrowserConfig getBrowserConfig(ExtensionContext extensionContext) {
-        Class<? extends PlaywrightBrowserConfig> configClass;
-
-        try {
-            configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseBrowserConfig.class).value();
-        } catch (Exception ignored) {
-            configClass = extensionContext.getRequiredTestClass().getAnnotation(UseBrowserConfig.class).value();
+        BrowserConfig config = getObjectFromStore(extensionContext, getBrowserConfigId(extensionContext), BrowserConfig.class);
+        if (config == null) {
+            Class<? extends PlaywrightBrowserConfig> configClass;
+            try {
+                configClass = extensionContext.getRequiredTestMethod().getAnnotation(UseBrowserConfig.class).value();
+            } catch (Exception ignored) {
+                configClass = extensionContext.getRequiredTestClass().getAnnotation(UseBrowserConfig.class).value();
+            }
+            config = createInstanceOfConfig(configClass).getBrowserConfig();
+            saveBrowserConfigInStore(extensionContext, config);
         }
-
-        return createInstanceOfConfig(configClass).getBrowserConfig();
+        return config;
     }
 
     private static <T> T createInstanceOfConfig(Class<T> configClass) {
@@ -59,5 +67,17 @@ public class ExtensionUtils {
             String message = String.format("Unable to create instance of %s.  Ensure the class has a public default constructor.", configClass.getName());
             throw new RuntimeException(message, ex);
         }
+    }
+
+    private static String getBrowserConfigId(ExtensionContext extensionContext) {
+        return extensionContext.getUniqueId() + ".browserConfigId.";
+    }
+
+    private static String getRestConfigId(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        String id = ".restConfigId.";
+        if(parameterContext == null) {
+            return extensionContext.getUniqueId() + id;
+        }
+        return extensionContext.getUniqueId() + id + parameterContext.getIndex();
     }
 }
