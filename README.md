@@ -16,7 +16,7 @@ the wiki for v1 docs.  It is recommended to upgrade to v2.0.  Migration help can
 <dependency>
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>2.2.3</version>
+    <version>2.2.5</version>
 </dependency>
 ```
 
