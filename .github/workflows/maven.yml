@@ -10,9 +10,9 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         java: [ '8', '11', '17' ]
-        playwright: [ '1.18.0', '1.19.0', '1.20.0' ]
+        playwright: [ '1.18.0', '1.27.1' ]
     runs-on: ${{ matrix.os }}
     name: ${{matrix.os}} - Java ${{ matrix.java }} - Playwright ${{matrix.playwright}}
     steps:
@@ -22,5 +22,5 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" -DexcludedGroups=playwrightCreate,indirect --file pom.xml --no-transfer-progress
-      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" -Dgroups=playwrightCreate --file pom.xml --no-transfer-progress
+      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" "-DexcludedGroups=playwrightCreate,indirect" --file pom.xml --no-transfer-progress
+      - run: mvn clean test "-Dplaywright.version=${{matrix.playwright}}" -Dgroups=playwrightCreate -DexcludedGroups=flakey --file pom.xml --no-transfer-progress

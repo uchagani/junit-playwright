@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.TestWatcher;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.github.uchagani.jp.APIRequestContextParameterResolver.closeAPIRequestContext;
 import static io.github.uchagani.jp.ExtensionUtils.getBrowserConfig;
@@ -53,7 +55,10 @@ public class PlaywrightTestWatcher implements TestWatcher {
     }
 
     private String getSafeTestName(ExtensionContext extensionContext) {
-        return String.format("%s.%s.zip", extensionContext.getRequiredTestClass().getName(), extensionContext.getRequiredTestMethod().getName());
+        Pattern regex = Pattern.compile("\\[class:(.*)\\]\\/\\[method:(.*)\\]");
+        Matcher matcher = regex.matcher(extensionContext.getUniqueId());
+        matcher.find();
+        return matcher.group(1) + "." + matcher.group(2) + ".zip";
     }
 
     private void cleanup(ExtensionContext extensionContext) {

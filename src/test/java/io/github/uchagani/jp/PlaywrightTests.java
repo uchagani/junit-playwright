@@ -22,6 +22,7 @@ public class PlaywrightTests {
                 .assertStatistics(stat -> stat.succeeded(1));
     }
 
+    @Tag("flakey")
     @Test
     void injectPlaywrightWithOptionsTestRunsFails() {
         EngineTestKit

@@ -13,17 +13,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-ext/2022.1.7/manifold-ext-2022.1.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold/2022.1.7/manifold-2022.1.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-rt/2022.1.7/manifold-rt-2022.1.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-util/2022.1.7/manifold-util-2022.1.7.jar" />
-          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-ext-rt/2022.1.7/manifold-ext-rt-2022.1.7.jar" />
+          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-ext/2022.1.19/manifold-ext-2022.1.19.jar" />
+          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold/2022.1.19/manifold-2022.1.19.jar" />
+          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-rt/2022.1.19/manifold-rt-2022.1.19.jar" />
+          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-util/2022.1.19/manifold-util-2022.1.19.jar" />
+          <entry name="$MAVEN_REPOSITORY$/systems/manifold/manifold-ext-rt/2022.1.19/manifold-ext-rt-2022.1.19.jar" />
         </processorPath>
         <module name="junit-playwright" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="junit-playwright" target="8" />
+      <module name="junit-playwright" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
