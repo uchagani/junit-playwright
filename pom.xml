@@ -6,7 +6,7 @@
 
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>2.2.5</version>
+    <version>3.0.1</version>
 
     <name>junit-playwright</name>
     <description>junit-playwright allows you to easily run Playwright-Java tests in parallel</description>
@@ -21,10 +21,10 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <playwright.version>1.20.0</playwright.version>
+        <playwright.version>1.27.1</playwright.version>
         <junit.version>5.8.2</junit.version>
         <!-- set latest manifold version here -->
-        <manifold.version>2022.1.7</manifold.version>
+        <manifold.version>2022.1.19</manifold.version>
     </properties>
 
     <scm>

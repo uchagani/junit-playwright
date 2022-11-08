@@ -77,6 +77,18 @@ public class TraceTestCase {
     }
 
     @Test
+    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
+    public void traceFile_onFail_isCreated(Page ignored, String foo) {
+        fail("force fail");
+    }
+
+    @Test
+    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
+    public void traceFile_onFail_isCreated() {
+        fail("force fail");
+    }
+
+    @Test
     @UseBrowserConfig(TraceBrowserConfigAlternateOutputDir.class)
     public void traceFile_inAlternateDir_isCreated(Page ignored) {
         //force pass
