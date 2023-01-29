@@ -3,10 +3,11 @@ package io.github.uchagani.jp;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -31,30 +32,23 @@ public class TraceTests {
             BrowserConfig config = getBrowserConfig(test.getAnnotation(UseBrowserConfig.class).value());
             Path outputDir = config.getOutputDirectory();
 
-            String testName = generateFileNameFromMethod(test);
             if (test.getName().endsWith("isCreated")) {
-                assertThat(outputDir).isDirectoryContaining(getTraceFileName(testName));
+                // ParameterizedTest display name is hardcoded here because we don't want to add
+                // ParameterizedTest package as a dependency since
+                // We don't have access to ParameterizedTest.class inside of PlaywrightTestWatcher
+                if (AnnotationUtils.isAnnotated(test, ParameterizedTest.class)) {
+                    assertThat(outputDir).isDirectoryContaining(getTraceFileName("TestName - value1"));
+                } else {
+                    assertThat(outputDir).isDirectoryContaining(getTraceFileName(test.getName()));
+                }
             } else if (test.getName().endsWith("isNotCreated")) {
-                assertThat(outputDir).isDirectoryNotContaining(getTraceFileName(testName));
+                assertThat(outputDir).isDirectoryNotContaining(getTraceFileName(test.getName()));
             }
         }
-    }
-
-    private String generateFileNameFromMethod(Method method) {
-        StringBuilder testName = new StringBuilder(method.getName());
-        testName.append("(");
-        for(int i = 0; i < method.getParameterCount(); i++) {
-            if(i > 0) {
-                testName.append(", ");
-            }
-            testName.append(method.getParameters()[i].getType().getName());
-        }
-        testName.append(")");
-        return testName.toString();
     }
 
     private String getTraceFileName(String testName) {
-        return "glob:**" + TraceTestCase.class.getName() + "." + testName + ".zip";
+        return "glob:**" + TraceTestCase.class.getName() + "." + testName + "(Page).zip";
     }
 
     private BrowserConfig getBrowserConfig(Class<? extends PlaywrightBrowserConfig> clazz) {

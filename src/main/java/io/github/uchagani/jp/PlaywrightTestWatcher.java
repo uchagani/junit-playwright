@@ -2,8 +2,10 @@ package io.github.uchagani.jp;
 
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Tracing;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.platform.commons.util.AnnotationUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,10 +57,7 @@ public class PlaywrightTestWatcher implements TestWatcher {
     }
 
     private String getSafeTestName(ExtensionContext extensionContext) {
-        Pattern regex = Pattern.compile("\\[class:(.*)\\]\\/\\[method:(.*)\\]");
-        Matcher matcher = regex.matcher(extensionContext.getUniqueId());
-        matcher.find();
-        return matcher.group(1) + "." + matcher.group(2) + ".zip";
+        return extensionContext.getRequiredTestClass() + "." + extensionContext.getDisplayName() + ".zip";
     }
 
     private void cleanup(ExtensionContext extensionContext) {

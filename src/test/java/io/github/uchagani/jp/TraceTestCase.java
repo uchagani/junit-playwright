@@ -7,6 +7,8 @@ import io.github.uchagani.jp.configs.TraceBrowserConfigSaveOnlyOnFailure;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -37,6 +39,14 @@ public class TraceTestCase {
         } catch (Exception ignored) {
         }
     }
+
+    @ParameterizedTest(name = "TestName - {0}")
+    @ValueSource(strings = {"value1"})
+    @UseBrowserConfig(TraceBrowserConfig.class)
+    public void parameterizedTests_isCreated(String value) {
+        return;
+    }
+
 
     @Test
     @UseBrowserConfig(TraceBrowserConfig.class)
@@ -73,18 +83,6 @@ public class TraceTestCase {
     @Test
     @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
     public void traceFile_onFail_isCreated(Page ignored) {
-        fail("force fail");
-    }
-
-    @Test
-    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
-    public void traceFile_onFail_isCreated(Page ignored, String foo) {
-        fail("force fail");
-    }
-
-    @Test
-    @UseBrowserConfig(TraceBrowserConfigSaveOnlyOnFailure.class)
-    public void traceFile_onFail_isCreated() {
         fail("force fail");
     }
 
