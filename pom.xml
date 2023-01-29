@@ -6,7 +6,7 @@
 
     <groupId>io.github.uchagani</groupId>
     <artifactId>junit-playwright</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 
     <name>junit-playwright</name>
     <description>junit-playwright allows you to easily run Playwright-Java tests in parallel</description>
@@ -54,6 +54,12 @@
     </distributionManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.microsoft.playwright</groupId>
             <artifactId>playwright</artifactId>
